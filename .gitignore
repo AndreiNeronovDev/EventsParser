@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+*.user
+agenda.json
+agenda.json.tmp.*
+events.json
+events.json.tmp.*
