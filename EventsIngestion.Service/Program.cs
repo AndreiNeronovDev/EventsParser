@@ -1,20 +1,13 @@
 using EventsIngestion.Service.Abstraction;
 using EventsIngestion.Service.Logic;
+using EventsIngestion.Service.Logic.Extractors;
 using EventsIngestion.Service.Options;
+using EventsIngestion.Source.Muziekladder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 var builder = Host.CreateApplicationBuilder(args);
-
-builder.Logging.ClearProviders();
-builder.Logging.AddSimpleConsole(options =>
-{
-    options.SingleLine = true;
-    options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffZ ";
-    options.UseUtcTimestamp = true;
-});
 
 builder.Services.Configure<HostOptions>(options =>
 {
@@ -25,9 +18,13 @@ builder.Services.Configure<HostOptions>(options =>
     options.ShutdownTimeout = TimeSpan.FromSeconds(shutdownTimeoutSeconds);
 });
 
+//Adding extractors: 
+builder.Services.AddSingleton<IEventDataExtractor, MLadderEventExtractor>();
+
 builder.Services.AddSingleton(_ => IngestionTaskOptions.FromConfiguration(builder.Configuration));
-builder.Services.AddSingleton(_ => EventDataExtractorRegistry.CreateDefault());
-builder.Services.AddSingleton<IEventExtractionService, EventExtractionService>();
+builder.Services.AddSingleton<MLadderEventReader>();
+builder.Services.AddSingleton<EventExtractorsRegistry>();
+builder.Services.AddSingleton<IEventIngestionService, EventIngestionService>();
 builder.Services.AddHostedService<EventsIngestionWorker>();
 
 await builder.Build().RunAsync();

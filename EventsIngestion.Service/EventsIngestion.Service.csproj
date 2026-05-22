@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventsIngestion.Contracts\EventsIngestion.Contracts.csproj" />
+    <ProjectReference Include="..\EventsIngestion.Source.Muziekladder\EventsIngestion.Source.Muziekladder.csproj" />
   </ItemGroup>
 
   <ItemGroup>

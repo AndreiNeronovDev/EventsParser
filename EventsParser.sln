@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsIngestion.Service", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsIngestion.Contracts", "EventsIngestion.Contracts\EventsIngestion.Contracts.csproj", "{FF9FFF7E-82EB-48A7-BA79-F3B7AA96B0CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsIngestion.Source.Muziekladder", "EventsIngestion.Source.Muziekladder\EventsIngestion.Source.Muziekladder.csproj", "{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{FF9FFF7E-82EB-48A7-BA79-F3B7AA96B0CA}.Release|x64.Build.0 = Release|Any CPU
 		{FF9FFF7E-82EB-48A7-BA79-F3B7AA96B0CA}.Release|x86.ActiveCfg = Release|Any CPU
 		{FF9FFF7E-82EB-48A7-BA79-F3B7AA96B0CA}.Release|x86.Build.0 = Release|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Release|x64.Build.0 = Release|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF15FE6E-50A2-459D-B75D-A20E62DA2BA7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,7 +13,7 @@ public interface IEventDataExtractor
     string SourceCode { get; }
 
     /// <summary>
-    /// Gathers source data and maps it to normalized parsed event DTOs.
+    /// Gathers source data and maps it to normalized parsed event messages.
     /// </summary>
     Task<IReadOnlyCollection<ParsedEventMessage>> ExtractAsync(CancellationToken cancellationToken);
 }

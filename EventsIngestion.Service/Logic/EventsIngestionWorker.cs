@@ -10,7 +10,7 @@ namespace EventsIngestion.Service.Logic;
 /// </summary>
 public sealed class EventsIngestionWorker(
     IngestionTaskOptions options,
-    IEventExtractionService extractionService,
+    IEventIngestionService ingestionService,
     IHostApplicationLifetime applicationLifetime,
     ILogger<EventsIngestionWorker> logger) : BackgroundService
 {
@@ -19,16 +19,13 @@ public sealed class EventsIngestionWorker(
     {
         try
         {
-            logger.LogInformation(
-                "Starting events ingestion for source {SourceCode}.",
-                options.SourceCode);
-
-            var events = await extractionService.ExtractAsync(options.SourceCode, stoppingToken);
+            var result = await ingestionService.RunAsync(options.SourceCode, stoppingToken);
 
             logger.LogInformation(
-                "Finished events ingestion for source {SourceCode}. Parsed events: {EventCount}.",
-                options.SourceCode,
-                events.Count);
+                "Finished events ingestion for source {SourceCode}. Extracted: {ExtractedCount}. Published: {PublishedCount}.",
+                result.SourceCode,
+                result.ExtractedCount,
+                result.PublishedCount);
         }
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
