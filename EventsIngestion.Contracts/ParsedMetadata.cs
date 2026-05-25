@@ -3,7 +3,7 @@ namespace EventsIngestion.Contracts;
 /// <summary>
 /// Metadata attached to a parsed event message for tracing, routing, and idempotency.
 /// </summary>
-public sealed record ParsingMetadata
+public sealed record ParsedMetadata
 {
     /// <summary>
     /// Version of the message contract, used by consumers to handle future shape changes safely.

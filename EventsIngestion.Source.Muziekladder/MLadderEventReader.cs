@@ -129,7 +129,7 @@ public sealed class MLadderEventReader(
     private static ParsedEventMessage MapMessage(MLadderEvent parsed, Uri detailUri, Guid runId)
         => new()
         {
-            Metadata = new ParsingMetadata
+            Metadata = new ParsedMetadata
             {
                 SchemaVersion = SchemaVersion,
                 MessageId = Guid.NewGuid(),
@@ -138,7 +138,7 @@ public sealed class MLadderEventReader(
                 SourceEventId = GetSourceEventId(detailUri),
                 ProducedAtUtc = DateTimeOffset.UtcNow
             },
-            Event = new ParsingPayload
+            Event = new ParsedPayload
             {
                 Title = parsed.Title,
                 Description = parsed.Description,

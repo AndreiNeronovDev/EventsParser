@@ -3,7 +3,7 @@ namespace EventsIngestion.Contracts;
 /// <summary>
 /// Normalized event data parsed from an external source.
 /// </summary>
-public sealed record ParsingPayload
+public sealed record ParsedPayload
 {
     /// <summary>
     /// Gets the event title or display name.

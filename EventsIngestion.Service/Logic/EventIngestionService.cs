@@ -1,7 +1,6 @@
 using EventsIngestion.Service.Abstraction;
 using EventsIngestion.Service.Models;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace EventsIngestion.Service.Logic;
 
@@ -10,6 +9,7 @@ namespace EventsIngestion.Service.Logic;
 /// </summary>
 public sealed class EventIngestionService(
     EventExtractorsRegistry registry,
+    IMessagePublisher messagePublisher,
     ILogger<EventIngestionService> logger) : IEventIngestionService
 {
     /// <inheritdoc />
@@ -21,30 +21,17 @@ public sealed class EventIngestionService(
 
         var extractor = registry.GetExtractor(sourceCode);
         var events = await extractor.ExtractAsync(cancellationToken);
-        TEST(events);
 
         logger.LogInformation(
             "Event ingestion workflow extracted {ExtractedCount} events for source {SourceCode}.",
             events.Count,
             sourceCode);
 
+        var publishedCount = await messagePublisher.PublishBatchAsync(events, cancellationToken);
+
         return new EventIngestionRunResult(
             sourceCode,
             events.Count,
-            PublishedCount: 0);
-    }
-
-    private static void TEST(IReadOnlyCollection<Contracts.ParsedEventMessage> events)
-    {
-        var jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-
-        foreach (var message in events.Take(5))
-        {
-            Console.WriteLine("----- TEST parsed event -----");
-            Console.WriteLine(JsonSerializer.Serialize(message, jsonOptions));
-        }
+            PublishedCount: publishedCount);
     }
 }
