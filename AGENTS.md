@@ -9,4 +9,5 @@
 - Keep large source implementations in their own `EventsIngestion.Source.*` projects. The service should register and orchestrate them, not contain their parser internals.
 - Add XML documentation comments to all abstractions, public classes/records without interfaces, public methods, and methods with non-trivial logic.
 - Keep comments useful and concise. Avoid comments that merely restate the code.
+- Never throw exceptions from constructors. Use explicit validation or readiness methods for runtime configuration and external dependency checks.
 - The service should remain a Fargate-friendly one-shot worker task triggered by EventBridge: start, run the selected source extraction, publish/return results when implemented, and exit.

@@ -11,6 +11,7 @@ namespace EventsIngestion.Service.Logic;
 public sealed class EventsIngestionWorker(
     IngestionTaskOptions options,
     IEventIngestionService ingestionService,
+    IMessagePublisher messagePublisher,
     IHostApplicationLifetime applicationLifetime,
     ILogger<EventsIngestionWorker> logger) : BackgroundService
 {
@@ -19,6 +20,8 @@ public sealed class EventsIngestionWorker(
     {
         try
         {
+            await messagePublisher.EnsureReadyAsync(stoppingToken);
+
             var result = await ingestionService.RunAsync(options.SourceCode, stoppingToken);
 
             logger.LogInformation(

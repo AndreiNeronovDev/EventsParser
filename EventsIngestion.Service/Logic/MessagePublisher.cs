@@ -12,18 +12,34 @@ namespace EventsIngestion.Service.Logic
     internal class MessagePublisher(
         IAmazonSQS sqsClient,
         IOptions<SqsOptions> options,
-        ILogger<MessagePublisher> logger) : IMessagePublisher
+        ILogger<MessagePublisher> logger)
+        : IMessagePublisher
     {
+        // AWS SQS SendMessageBatch supports no more than 10 messages per request.
+        private const int MaxSqsBatchSize = 10;
+
         private readonly SqsOptions _options = options.Value;
+
+        /// <inheritdoc />
+        public async Task EnsureReadyAsync(CancellationToken cancellationToken = default)
+        {
+            EnsureQueueUrlConfigured();
+
+            var request = new GetQueueAttributesRequest
+            {
+                QueueUrl = _options.QueueUrl,
+                AttributeNames = ["QueueArn"]
+            };
+
+            var attributes = await sqsClient.GetQueueAttributesAsync(request, cancellationToken);
+
+            logger.LogInformation("SQS queue connection check succeeded.");
+        }
 
         /// <inheritdoc />
         public async Task PublishAsync(ParsedEventMessage message, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(_options.QueueUrl))
-            {
-                logger.LogError("SQS Queue URL is not configured. Skipping message publish.");
-                return;
-            }
+            EnsureQueueUrlConfigured();
 
             try
             {
@@ -57,11 +73,7 @@ namespace EventsIngestion.Service.Logic
         /// <inheritdoc />
         public async Task<int> PublishBatchAsync(IReadOnlyCollection<ParsedEventMessage> messages, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(_options.QueueUrl))
-            {
-                logger.LogWarning("SQS Queue URL is not configured. Skipping batch publish.");
-                return 0;
-            }
+            EnsureQueueUrlConfigured();
 
             if (messages.Count == 0)
             {
@@ -71,7 +83,7 @@ namespace EventsIngestion.Service.Logic
 
             var sentMessagesCount = 0;
 
-            var batches = messages.Chunk(_options.BatchSize);
+            var batches = messages.Chunk(GetBatchSize(_options.BatchSize));
 
             foreach (var batch in batches)
             {
@@ -115,6 +127,19 @@ namespace EventsIngestion.Service.Logic
             }
 
             return sentMessagesCount;
+        }
+
+        private static int GetBatchSize(int configuredBatchSize)
+        {
+            var size = configuredBatchSize > 0 ? configuredBatchSize : 1;
+
+            return Math.Min(size, MaxSqsBatchSize);
+        }
+
+        private void EnsureQueueUrlConfigured()
+        {
+            if (string.IsNullOrWhiteSpace(_options.QueueUrl))
+                throw new InvalidOperationException("SQS QueueUrl configuration value is required.");
         }
 
     }

@@ -8,6 +8,11 @@ namespace EventsIngestion.Service.Abstraction;
 public interface IMessagePublisher
 {
     /// <summary>
+    /// Checks that the publisher has enough configuration and connectivity to send messages.
+    /// </summary>
+    Task EnsureReadyAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Publish a single message 
     /// </summary>
     /// <param name="message">Message to send</param>
