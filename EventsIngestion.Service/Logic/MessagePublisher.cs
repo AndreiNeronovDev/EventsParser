@@ -10,13 +10,15 @@ using EventsIngestion.Service.Options;
 namespace EventsIngestion.Service.Logic
 {
     internal class MessagePublisher(
-        IAmazonSQS sqsClient,
+        ISqsClientFactory sqsClientFactory,
         IOptions<SqsOptions> options,
         ILogger<MessagePublisher> logger)
         : IMessagePublisher
     {
         // AWS SQS SendMessageBatch supports no more than 10 messages per request.
         private const int MaxSqsBatchSize = 10;
+
+        private readonly IAmazonSQS _sqsClient = sqsClientFactory.CreateClient();
 
         private readonly SqsOptions _options = options.Value;
 
@@ -31,7 +33,7 @@ namespace EventsIngestion.Service.Logic
                 AttributeNames = ["QueueArn"]
             };
 
-            var attributes = await sqsClient.GetQueueAttributesAsync(request, cancellationToken);
+            var attributes = await _sqsClient.GetQueueAttributesAsync(request, cancellationToken);
 
             logger.LogInformation("SQS queue connection check succeeded.");
         }
@@ -51,7 +53,7 @@ namespace EventsIngestion.Service.Logic
                     MessageBody = messageBody
                 };
 
-                var response = await sqsClient.SendMessageAsync(sendRequest, cancellationToken);
+                var response = await _sqsClient.SendMessageAsync(sendRequest, cancellationToken);
 
                 if ((int)response.HttpStatusCode >= 200 && (int)response.HttpStatusCode < 300)
                 {
@@ -101,7 +103,7 @@ namespace EventsIngestion.Service.Logic
                         Entries = entries
                     };
 
-                    var response = await sqsClient.SendMessageBatchAsync(batchRequest, cancellationToken);
+                    var response = await _sqsClient.SendMessageBatchAsync(batchRequest, cancellationToken);
 
                     if (response.Successful.Count > 0)
                     {
