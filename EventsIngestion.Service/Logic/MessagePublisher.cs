@@ -105,7 +105,7 @@ namespace EventsIngestion.Service.Logic
 
                     var response = await _sqsClient.SendMessageBatchAsync(batchRequest, cancellationToken);
 
-                    if (response.Successful.Count > 0)
+                    if (response.Successful is { Count: > 0 })
                     {
                         sentMessagesCount += response.Successful.Count;
 
@@ -114,7 +114,7 @@ namespace EventsIngestion.Service.Logic
                             response.Successful.Count);
                     }
 
-                    if (response.Failed.Count > 0)
+                    if (response.Failed is { Count: > 0 })
                     {
                         logger.LogWarning(
                             "Failed to publish {Count} messages in batch. Errors: {Errors}",

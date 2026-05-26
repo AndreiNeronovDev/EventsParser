@@ -6,7 +6,7 @@ internal static class UriNormalizer
     {
         if (string.IsNullOrWhiteSpace(href))
             return "";
-        if (Uri.TryCreate(href, UriKind.Absolute, out var absolute))
+        if (Uri.TryCreate(href, UriKind.Absolute, out var absolute) && IsHttpUri(absolute))
             return CanonicalGigUrl(absolute);
         if (Uri.TryCreate(baseUri, href, out var combined))
             return CanonicalGigUrl(combined);
@@ -17,12 +17,16 @@ internal static class UriNormalizer
     {
         if (string.IsNullOrWhiteSpace(href))
             return "";
-        if (Uri.TryCreate(href, UriKind.Absolute, out var absolute))
+        if (Uri.TryCreate(href, UriKind.Absolute, out var absolute) && IsHttpUri(absolute))
             return absolute.ToString();
         if (Uri.TryCreate(baseUri, href, out var combined))
             return combined.ToString();
         return href.Trim();
     }
+
+    private static bool IsHttpUri(Uri uri)
+        => string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
 
     private static string CanonicalGigUrl(Uri uri)
     {
