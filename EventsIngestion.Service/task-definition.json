@@ -1,0 +1,36 @@
+{
+  "family": "events-ingestion-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_ECS_TASK_EXECUTION_ROLE_NAME",
+  "taskRoleArn": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_EVENTS_INGESTION_TASK_ROLE_NAME",
+  "containerDefinitions": [
+    {
+      "name": "events-ingestion-service",
+      "image": "YOUR_ECR_IMAGE_URI_PLACEHOLDER",
+      "essential": true,
+      "environment": [
+        {
+          "name": "Sqs__Region",
+          "value": "YOUR_AWS_REGION"
+        },
+        {
+          "name": "Sqs__QueueUrl",
+          "value": "YOUR_SQS_QUEUE_URL"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/events-ingestion-service",
+          "awslogs-region": "YOUR_AWS_REGION",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
