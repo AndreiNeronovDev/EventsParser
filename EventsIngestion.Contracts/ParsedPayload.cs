@@ -31,6 +31,11 @@ public sealed record ParsedPayload
     public DateTimeOffset? StartsAt { get; init; }
 
     /// <summary>
+    /// Gets the source-local event date at midnight when a calendar date can be parsed.
+    /// </summary>
+    public DateTime? StartDate { get; init; }
+
+    /// <summary>
     /// Gets the event end instant when it is available from the source.
     /// </summary>
     public DateTimeOffset? EndsAt { get; init; }

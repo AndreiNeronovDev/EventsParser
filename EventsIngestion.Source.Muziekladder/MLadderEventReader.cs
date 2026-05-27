@@ -127,7 +127,10 @@ public sealed class MLadderEventReader(
     }
 
     private static ParsedEventMessage MapMessage(MLadderEvent parsed, Uri detailUri, Guid runId)
-        => new()
+    {
+        var startDate = MLadderDateParser.ParseStartDate(parsed.Date);
+
+        return new ParsedEventMessage
         {
             Metadata = new ParsedMetadata
             {
@@ -142,6 +145,8 @@ public sealed class MLadderEventReader(
             {
                 Title = parsed.Title,
                 Description = parsed.Description,
+                StartsAt = MLadderDateParser.MapStartsAt(startDate, parsed.StartTime),
+                StartDate = startDate,
                 DateText = parsed.Date,
                 StartTimeText = parsed.StartTime,
                 DoorsOpenText = parsed.DoorsTime,
@@ -162,6 +167,7 @@ public sealed class MLadderEventReader(
                     .ToArray()
             }
         };
+    }
 
     private static ParsedVenue? MapVenue(MLadderLocation location)
     {

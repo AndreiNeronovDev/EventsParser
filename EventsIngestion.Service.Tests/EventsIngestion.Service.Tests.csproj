@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventsIngestion.Source.Muziekladder\EventsIngestion.Source.Muziekladder.csproj" />
     <ProjectReference Include="..\EventsIngestion.Service\EventsIngestion.Service.csproj" />
   </ItemGroup>
 
