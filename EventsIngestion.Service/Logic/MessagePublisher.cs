@@ -17,6 +17,7 @@ namespace EventsIngestion.Service.Logic
     {
         // AWS SQS SendMessageBatch supports no more than 10 messages per request.
         private const int MaxSqsBatchSize = 10;
+        private const string MessageTypeAttributeName = "messageType";
 
         private readonly IAmazonSQS _sqsClient = sqsClientFactory.CreateClient();
 
@@ -50,7 +51,8 @@ namespace EventsIngestion.Service.Logic
                 var sendRequest = new SendMessageRequest
                 {
                     QueueUrl = _options.QueueUrl,
-                    MessageBody = messageBody
+                    MessageBody = messageBody,
+                    MessageAttributes = CreateMessageAttributes()
                 };
 
                 var response = await _sqsClient.SendMessageAsync(sendRequest, cancellationToken);
@@ -94,7 +96,8 @@ namespace EventsIngestion.Service.Logic
                     var entries = batch.Select((msg, index) => new SendMessageBatchRequestEntry
                     {
                         Id = index.ToString(),
-                        MessageBody = JsonSerializer.Serialize(msg)
+                        MessageBody = JsonSerializer.Serialize(msg),
+                        MessageAttributes = CreateMessageAttributes()
                     }).ToList();
 
                     var batchRequest = new SendMessageBatchRequest
@@ -137,6 +140,16 @@ namespace EventsIngestion.Service.Logic
 
             return Math.Min(size, MaxSqsBatchSize);
         }
+
+        private static Dictionary<string, MessageAttributeValue> CreateMessageAttributes()
+            => new()
+            {
+                [MessageTypeAttributeName] = new MessageAttributeValue
+                {
+                    DataType = "String",
+                    StringValue = MessageTypes.ParsedEvent
+                }
+            };
 
         private void EnsureQueueUrlConfigured()
         {
