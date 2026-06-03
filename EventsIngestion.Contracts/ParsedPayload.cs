@@ -116,11 +116,6 @@ public sealed record ParsedPayload
     public IReadOnlyCollection<string> Genres { get; init; } = [];
 
     /// <summary>
-    /// Gets normalized category labels parsed or inferred from the source.
-    /// </summary>
-    public IReadOnlyCollection<string> Categories { get; init; } = [];
-
-    /// <summary>
     /// Gets external artist or attraction data attached to the event.
     /// </summary>
     public IReadOnlyCollection<ParsedAttraction> Attractions { get; init; } = [];
