@@ -106,11 +106,6 @@ public sealed record ParsedPayload
     public IReadOnlyCollection<ParsedLineupItem> Lineup { get; init; } = [];
 
     /// <summary>
-    /// Gets source category, segment, genre, or subgenre values before internal classification mapping.
-    /// </summary>
-    public IReadOnlyCollection<ParsedClassification> Classifications { get; init; } = [];
-
-    /// <summary>
     /// Gets normalized genre labels parsed or inferred from the source.
     /// </summary>
     public IReadOnlyCollection<string> Genres { get; init; } = [];

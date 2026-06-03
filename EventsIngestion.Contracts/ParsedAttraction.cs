@@ -34,9 +34,4 @@ public sealed record ParsedAttraction
     /// Gets social or website links associated with the attraction.
     /// </summary>
     public IReadOnlyCollection<ParsedLink> Links { get; init; } = [];
-
-    /// <summary>
-    /// Gets source classification values associated with the attraction.
-    /// </summary>
-    public IReadOnlyCollection<ParsedClassification> Classifications { get; init; } = [];
 }

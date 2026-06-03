@@ -161,10 +161,7 @@ public sealed class MLadderEventReader(
                     .Where(name => !string.IsNullOrWhiteSpace(name))
                     .Select(name => new ParsedLineupItem { Name = name })
                     .ToArray(),
-                Genres = parsed.Genres,
-                Classifications = parsed.Genres
-                    .Select(genre => new ParsedClassification { Type = "genre", Name = genre })
-                    .ToArray()
+                Genres = parsed.Genres
             }
         };
     }
