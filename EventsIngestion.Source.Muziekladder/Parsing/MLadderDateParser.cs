@@ -26,13 +26,16 @@ internal static class MLadderDateParser
     }
 
     public static DateTimeOffset? MapStartsAt(DateTime? startDate, string? startTimeText)
+        => MapDateTime(startDate, startTimeText);
+
+    public static DateTimeOffset? MapDateTime(DateTime? date, string? timeText)
     {
-        if (startDate is null || string.IsNullOrWhiteSpace(startTimeText))
+        if (date is null || string.IsNullOrWhiteSpace(timeText))
             return null;
 
         var formats = new[] { "H:mm", "HH:mm", "H.mm", "HH.mm" };
         if (!DateTime.TryParseExact(
-                startTimeText.Trim(),
+                timeText.Trim(),
                 formats,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -44,7 +47,7 @@ internal static class MLadderDateParser
         if (!TimeZoneInfo.TryFindSystemTimeZoneById(SourceTimeZoneId, out var timeZone))
             return null;
 
-        var localStart = startDate.Value.Date.Add(time.TimeOfDay);
+        var localStart = date.Value.Date.Add(time.TimeOfDay);
         return new DateTimeOffset(localStart, timeZone.GetUtcOffset(localStart));
     }
 }

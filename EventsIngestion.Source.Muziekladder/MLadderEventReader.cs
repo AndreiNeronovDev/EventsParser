@@ -145,11 +145,8 @@ public sealed class MLadderEventReader(
             {
                 Title = parsed.Title,
                 Description = parsed.Description,
-                StartsAt = MLadderDateParser.MapStartsAt(startDate, parsed.StartTime),
-                StartDate = startDate,
-                DateText = parsed.Date,
-                StartTimeText = parsed.StartTime,
-                DoorsOpenText = parsed.DoorsTime,
+                StartsAt = MLadderDateParser.MapDateTime(startDate, parsed.StartTime),
+                DoorsOpenAt = MLadderDateParser.MapDateTime(startDate, parsed.DoorsTime),
                 ExternalUrl = parsed.OriginalEventLink ?? detailUri.ToString(),
                 Venue = MapVenue(parsed.Location),
                 Images = parsed.ImageUrls

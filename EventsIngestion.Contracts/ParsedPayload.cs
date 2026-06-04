@@ -31,11 +31,6 @@ public sealed record ParsedPayload
     public DateTimeOffset? StartsAt { get; init; }
 
     /// <summary>
-    /// Gets the source-local event date at midnight when a calendar date can be parsed.
-    /// </summary>
-    public DateTime? StartDate { get; init; }
-
-    /// <summary>
     /// Gets the event end instant when it is available from the source.
     /// </summary>
     public DateTimeOffset? EndsAt { get; init; }
@@ -46,24 +41,9 @@ public sealed record ParsedPayload
     public DateTimeOffset? DoorsOpenAt { get; init; }
 
     /// <summary>
-    /// Gets the source date text when the source cannot yet be normalized into StartsAt.
-    /// </summary>
-    public string? DateText { get; init; }
-
-    /// <summary>
-    /// Gets the source start time text when the source cannot yet be normalized into StartsAt.
-    /// </summary>
-    public string? StartTimeText { get; init; }
-
-    /// <summary>
     /// Gets the source end time text when the source cannot yet be normalized into EndsAt.
     /// </summary>
     public string? EndTimeText { get; init; }
-
-    /// <summary>
-    /// Gets the source doors-open time text when the source cannot yet be normalized into DoorsOpenAt.
-    /// </summary>
-    public string? DoorsOpenText { get; init; }
 
     /// <summary>
     /// Gets the source or IANA time zone identifier when available.

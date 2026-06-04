@@ -36,4 +36,21 @@ public sealed class MLadderDateParserTests
             Assert.That(result?.Minute, Is.EqualTo(30));
         });
     }
+
+    [Test]
+    public void MapDateTime_CombinesParsedDateAndDoorsTime()
+    {
+        var startDate = MLadderDateParser.ParseStartDate("vrijdag 22 mei 2026");
+
+        var result = MLadderDateParser.MapDateTime(startDate, "19:30");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result?.Year, Is.EqualTo(2026));
+            Assert.That(result?.Month, Is.EqualTo(5));
+            Assert.That(result?.Day, Is.EqualTo(22));
+            Assert.That(result?.Hour, Is.EqualTo(19));
+            Assert.That(result?.Minute, Is.EqualTo(30));
+        });
+    }
 }
