@@ -1,0 +1,47 @@
+﻿name: Publish Contracts Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - "EventsIngestion.Contracts/**"
+      - ".github/workflows/publish-contracts.yml"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore contracts
+        run: dotnet restore ./EventsIngestion.Contracts/EventsIngestion.Contracts.csproj
+
+      - name: Pack contracts
+        run: >
+          dotnet pack ./EventsIngestion.Contracts/EventsIngestion.Contracts.csproj
+          --configuration Release
+          --no-restore
+          --output ./artifacts
+          /p:PackageVersion=1.0.${{ github.run_number }}
+
+      - name: Publish contracts
+        run: >
+          dotnet nuget push "./artifacts/*.nupkg"
+          --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+          --api-key "${{ secrets.GITHUB_TOKEN }}"
+          --skip-duplicate
+

@@ -1,0 +1,41 @@
+name: CI
+
+# Run CI for pull requests and for direct pushes to the main development branches.
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build-test:
+    # Use a Linux runner because the service is intended to run in a Linux Docker/Fargate environment.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository code into the GitHub Actions runner.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Install the .NET SDK version used by the solution projects.
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Restore NuGet packages for all projects in the solution.
+      - name: Restore dependencies
+        run: dotnet restore EventsParser.sln
+
+      # Compile the full solution in Release mode without restoring again.
+      - name: Build solution
+        run: dotnet build EventsParser.sln --configuration Release --no-restore
+
+      # Run the automated test project against the already-built Release binaries.
+      - name: Run tests
+        run: dotnet test EventsParser.sln --configuration Release --no-build --verbosity normal
+
+      # Build the service Docker image to catch Dockerfile and publish-time problems before deployment.
+      - name: Build service Docker image
+        run: docker build -f EventsIngestion.Service/Dockerfile -t events-ingestion-service:ci .
